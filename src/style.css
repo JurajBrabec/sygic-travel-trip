@@ -1,0 +1,43 @@
+:root {
+  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  --mainH: 168;
+  --mainS: 100%;
+  --mainLB: 30%;
+  --mainLF: 100%;
+  --mainA: 0.165;
+
+  --rowH: 0;
+  --rowS: 0%;
+  --rowLB: 100%;
+  --rowLF: 0%;
+  --rowBW: 1px;
+  --rowBS: solid;
+}
+
+@media print {
+  body {
+    margin-left: 5mm;
+    margin-right: 5mm;
+    padding: 0px;
+  }
+  .no-print {
+    display: none !important;
+  }
+  main {
+    display: block;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+  }
+  table {
+    page-break-inside: auto;
+    min-width: 100%;
+  }
+  th {
+    display: table-header-group;
+  }
+  tr {
+    page-break-inside: avoid;
+    page-break-before: auto;
+  }
+}
