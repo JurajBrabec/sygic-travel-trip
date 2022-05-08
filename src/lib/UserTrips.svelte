@@ -34,21 +34,24 @@
         <Day />
       {/if}
     {:else}
-      <div class="trips">
-        {#each $trips as trip (trip.id)}
-          <div
-            class="trip"
-            style={trip.style}
-            on:click={() => selectTrip(trip.id)}
-          >
-            <div class="title">{trip.name}</div>
-            <div class="description">{trip.description}</div>
-            <div class="url">
-              <a href={trip.url} target="_blank">*</a>
+      {#each [false, true] as history}
+        <h3>{history ? 'Previous' : 'Planned'} trips</h3>
+        <div class="trips">
+          {#each $trips.filter( (t) => (history ? new Date(t.start) < new Date() : new Date(t.start) >= new Date()) ) as trip (trip.id)}
+            <div
+              class="trip"
+              style={trip.style}
+              on:click={() => selectTrip(trip.id)}
+            >
+              <div class="title">{trip.name}</div>
+              <div class="description">{trip.description}</div>
+              <div class="url">
+                <a href={trip.url} target="_blank">*</a>
+              </div>
             </div>
-          </div>
-        {/each}
-      </div>
+          {/each}
+        </div>
+      {/each}
     {/if}
   {:else}
     <slot />

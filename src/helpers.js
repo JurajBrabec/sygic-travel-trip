@@ -77,7 +77,7 @@ export const parseTrips = (trips = []) =>
     const { media, starts_on, ends_on, day_count } = trip;
     const style = bgStyle(media);
     const description = `${starts_on} - ${ends_on} (${day_count} days)`;
-    return { ...trip, style, description };
+    return { ...trip, style, start: starts_on, description };
   });
 
 export const parseTrip = (trip = {}) => {
@@ -125,7 +125,7 @@ export const parseDay = ({ day = [], paths = [], places = [] } = {}) => {
       note: tNote,
       route_id,
     } = transport_from_previous || {};
-    const tName = `${placeName} - ${name_local || name}`;
+    const tName = placeName ? `${placeName} - ${name_local || name}` : '';
 
     const {
       distance,
@@ -161,7 +161,7 @@ export const parseDay = ({ day = [], paths = [], places = [] } = {}) => {
       duration: formatDuration(duration),
       start: formatDuration(start),
       marker_url,
-      name: name_local || name || '',
+      name: placeName || '',
       address: address || '',
       note: note || '',
       stay: formatDuration(stay),
