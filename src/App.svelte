@@ -11,7 +11,7 @@
 
   let username = import.meta.env.VITE_SYGICTRAVEL_USERNAME;
   let password = import.meta.env.VITE_SYGICTRAVEL_PASSWORD;
-  let files = [];
+  let files;
   const reader = createReader(readHAR);
 </script>
 

@@ -37,7 +37,9 @@
       {#each [false, true] as history}
         <h3>{history ? 'Previous' : 'Planned'} trips</h3>
         <div class="trips">
-          {#each $trips.filter( (t) => (history ? new Date(t.start) < new Date() : new Date(t.start) >= new Date()) ) as trip (trip.id)}
+          {#each $trips
+            .filter( (t) => (history ? new Date(t.start) < new Date() : new Date(t.start) >= new Date()) )
+            .sort( (a, b) => ((history ? a.start > b.start : b.start > a.start) ? 0 : 1) ) as trip (trip.id)}
             <div
               class="trip"
               style={trip.style}
