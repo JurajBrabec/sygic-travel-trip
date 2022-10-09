@@ -13,9 +13,9 @@ export const getTrip = async (tripId = trip) => {
     if (!trips.has(tripId)) {
       const response = await fetchData('GET', '/trips/' + tripId);
       trips.set(tripId, response.data.trip);
-      trip = tripId;
-      getDay(0);
     }
+    trip = tripId;
+    getDay(0);
     getPlaces(trips.get(trip).destinations);
     if (callback) callback({ trip: trips.get(trip) });
   } catch (error) {

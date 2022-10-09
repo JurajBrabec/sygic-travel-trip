@@ -8,6 +8,7 @@ const API_URL = 'https://api.sygictraveldata.com/v' + VERSION + '/';
 let auth = {};
 let importFrom = null;
 
+export const getAuth = () => ({ ...auth });
 export const setAuth = (newAuth = {}) => {
   auth = newAuth;
 };

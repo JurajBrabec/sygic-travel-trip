@@ -1,5 +1,5 @@
 import HAR from './importHar';
-import { setSource } from './fetchData';
+import { getAuth, setSource } from './fetchData';
 import auth from './auth';
 import user, { init as userInit, getUser } from './user';
 import places, { init as placesInit } from './places';
@@ -9,12 +9,20 @@ import trip, { init as tripInit, getDay, getTrip } from './trip';
 const logo_url = 'https://cdn.travel.sygic.com/persistent/svgz/sygic.svg';
 const trip_url = 'https://cdn.travel.sygic.com/maps.sygic.com/img/wizard.png';
 
+let onLogin;
 let done;
 
-const login = async ({ access_token, username, password, device_code }) => {
+const login = async ({
+  access_token,
+  refresh_token,
+  username,
+  password,
+  device_code,
+}) => {
   setSource();
   const error = await auth({
     access_token,
+    refresh_token,
     username,
     password,
     device_code,
@@ -23,7 +31,9 @@ const login = async ({ access_token, username, password, device_code }) => {
     if (done) return done(error);
     throw error;
   }
+  if (onLogin) onLogin(getAuth());
   getUser();
+  return getAuth();
 };
 
 const parse = (type, contents) => {
@@ -31,7 +41,21 @@ const parse = (type, contents) => {
   getUser().then(() => getTrip(type.tripId()));
 };
 
-const init = ({ onUser, onTrip, onPlaces, onPaths, onDone } = {}) => {
+const init = ({
+  // @ts-ignore
+  onLogin: fn,
+  // @ts-ignore
+  onUser,
+  // @ts-ignore
+  onTrip,
+  // @ts-ignore
+  onPlaces,
+  // @ts-ignore
+  onPaths,
+  // @ts-ignore
+  onDone,
+} = {}) => {
+  onLogin = fn;
   if (onUser) userInit({ onUser, onDone });
   if (onPlaces) placesInit({ onPlaces });
   if (onPaths) pathsInit({ onPaths });
