@@ -16,8 +16,17 @@ export const trip = derived(_trip, ($_trip) => parseTrip($_trip));
 export const day = derived([_day, paths, places], ([$day, $paths, $places]) =>
   parseDay({ day: $day, paths: $paths, places: $places })
 );
+const access_token = localStorage.getItem('access_token');
+const refresh_token = localStorage.getItem('refresh_token');
+//if (access_token) travel.login({ access_token, refresh_token });
 
 const travel = SygicTravel.init({
+  access_token,
+  refresh_token,
+  onLogin: ({ access_token, refresh_token }) => {
+    localStorage.setItem('access_token', access_token);
+    localStorage.setItem('refresh_token', refresh_token);
+  },
   onUser: (data) => {
     if (data.user) user.set(data.user);
     if (data.tripList) _trips.set(data.tripList);
@@ -34,12 +43,17 @@ const travel = SygicTravel.init({
   },
 });
 
-export const login = (params) => {
+export const login = async (params) => {
   error.set();
   loading.set(true);
-  travel.login(params);
+  const auth = await travel.login(params);
 };
 
+export const logout = () => {
+  localStorage.removeItem('access_token');
+  localStorage.removeItem('refresh_token');
+  user.set(null);
+};
 export const readHAR = (text) => {
   error.set();
   loading.set(true);

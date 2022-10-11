@@ -52,6 +52,7 @@ export const formatDateTime = (date, addDays = 0) => {
   };
   const d = new Date(date);
   if (addDays) d.setDate(d.getDate() + addDays);
+  // @ts-ignore
   return d.toLocaleDateString(undefined, options);
 };
 
@@ -115,9 +116,8 @@ export const parseDay = ({ day = [], paths = [], places = [] } = {}) => {
       note,
     } = item;
 
-    const { marker, marker_url, name, name_local, address } =
+    const { marker, marker_url, name, name_local, address, location } =
       getPlace(place_id);
-
     const {
       mode: tMode,
       start_time: tStart,
@@ -169,6 +169,7 @@ export const parseDay = ({ day = [], paths = [], places = [] } = {}) => {
       important,
       long,
       lunch,
+      location,
     };
   });
 };

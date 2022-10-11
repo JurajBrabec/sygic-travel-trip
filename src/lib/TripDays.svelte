@@ -1,5 +1,15 @@
 <script>
-  import { trip, selectTrip, selectDay } from '../stores';
+  import { trip, selectTrip, selectDay } from '../stores.js';
+  let selected = 0;
+  const select = (index) => {
+    selected = index;
+    selectDay(index);
+  };
+  const label = (date, index) => {
+    const current = new Date(date);
+    current.setUTCDate(current.getUTCDate() + index);
+    return current.toLocaleDateString();
+  };
 </script>
 
 <div class="no-print">
@@ -18,8 +28,12 @@
     </div>
     <div class="days">
       {#each $trip.days as day, index (index)}
-        <button on:click={() => selectDay(index)}
-          ><i class="bx bx-calendar-star" title="Day" /> #{index + 1}</button
+        <button
+          disabled={index === selected}
+          title={`Day #${index + 1}`}
+          on:click={() => select(index)}
+          ><i class="bx bx-calendar-star" />
+          {label($trip.starts_on, index)}</button
         >
       {/each}
     </div>

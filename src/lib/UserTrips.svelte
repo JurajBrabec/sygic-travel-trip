@@ -4,12 +4,13 @@
   import {
     error,
     loading,
+    logout,
     user,
     trips,
     trip,
     selectTrip,
     day,
-  } from '../stores';
+  } from '../stores.js';
 </script>
 
 <div>
@@ -24,7 +25,7 @@
       <img src={$user.photo.url} alt="User" /><span>
         {$user.email}
       </span>
-      <button on:click={() => user.set(null)}
+      <button on:click={() => logout()}
         ><i class="bx bx-log-out" title="Log out" /></button
       >
     </div>

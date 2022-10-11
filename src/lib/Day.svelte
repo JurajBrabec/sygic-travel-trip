@@ -1,6 +1,47 @@
 <script>
-  import { day } from '../stores';
+  import Map from './Map.svelte';
+  import { day } from '../stores.js';
+  import map from '../googleMaps.js';
   import { Modes, Names } from '../helpers';
+
+  let origin = {};
+  let destination = {};
+  let travelMode;
+
+  const handleClick = (item) => {
+    map.setCenter(item.location, 15);
+  };
+
+  const markerClick = (title, position) => {
+    if (!origin.position || destination.position) {
+      origin = { title, position };
+      destination = {};
+    } else {
+      destination = { title, position };
+    }
+  };
+
+  const createMarkers = (day) => {
+    map.clearMarkers();
+    day
+      .filter(({ location }) => location)
+      .forEach(({ name, location }, index) => {
+        map.addMarker({
+          position: location,
+          label: `${index + 1}`,
+          title: name,
+          onClick: () => markerClick(name, location),
+        });
+      });
+    map.showMarkers();
+  };
+
+  const handleRoute = async (event) => {
+    const { routes } = await event.detail;
+    console.log(routes.length, routes[0].legs.length, routes[0].legs[0]);
+  };
+
+  $: createMarkers($day);
 </script>
 
 <section>
@@ -36,6 +77,7 @@
             class:long={i.long}
             class:lunch={i.lunch}
             class="place {i.mode} {i.marker}"
+            on:click={() => handleClick(i)}
           >
             {#if i.transport}
               <td colspan="3" />
@@ -70,14 +112,15 @@
       </tbody>
     </table>
   </article>
+  <Map bind:origin bind:destination bind:travelMode on:route={handleRoute} />
 </section>
 
 <style>
   section {
     display: flex;
-    flex-direction: column;
     gap: 10px;
     justify-content: space-between;
+    align-items: flex-start;
     width: 100%;
   }
 
@@ -88,7 +131,7 @@
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
-    padding: 15px;
+    padding: 15px 5px;
     margin: 0 auto;
     width: 100%;
   }
@@ -97,7 +140,6 @@
     border-collapse: collapse;
     box-shadow: 0 0 15px
       hsla(var(--rowH), var(--rowS), var(--rowLF), var(--mainA));
-    margin: 15px 0px;
     margin-bottom: 60px;
     width: 100%;
   }
@@ -295,5 +337,10 @@
 
   .note {
     font-style: italic;
+  }
+  tr.place:hover {
+    transform: translateX(-2px) translateY(-2px);
+    box-shadow: 2px 2px 5px silver;
+    transition: 0.2s ease-in-out;
   }
 </style>

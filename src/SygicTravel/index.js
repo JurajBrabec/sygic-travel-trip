@@ -43,6 +43,10 @@ const parse = (type, contents) => {
 
 const init = ({
   // @ts-ignore
+  access_token,
+  // @ts-ignore
+  refresh_token,
+  // @ts-ignore
   onLogin: fn,
   // @ts-ignore
   onUser,
@@ -62,6 +66,8 @@ const init = ({
   if (onTrip) tripInit({ onTrip, onDone });
   if (onDone) done = onDone;
 
+  // @ts-ignore
+  if (access_token) login({ access_token, refresh_token });
   return {
     login,
     importHAR: (contents) => parse(HAR, contents),
