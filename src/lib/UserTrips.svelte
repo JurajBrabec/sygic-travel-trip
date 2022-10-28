@@ -11,6 +11,16 @@
     selectTrip,
     day,
   } from '../stores.js';
+
+  let plannedTrips = [];
+  let previousTrips = [];
+
+  $: plannedTrips = $trips
+    .filter((t) => new Date(t.start) >= new Date())
+    .sort((a, b) => (b.start > a.start ? 0 : 1));
+  $: previousTrips = $trips
+    .filter((t) => new Date(t.start) < new Date())
+    .sort((a, b) => (a.start > b.start ? 0 : 1));
 </script>
 
 <div>
@@ -35,28 +45,31 @@
         <Day />
       {/if}
     {:else}
-      {#each [false, true] as history}
-        <h3>{history ? 'Previous' : 'Planned'} trips</h3>
-        <div class="trips">
-          {#each $trips
-            .filter( (t) => (history ? new Date(t.start) < new Date() : new Date(t.start) >= new Date()) )
-            .sort( (a, b) => ((history ? a.start > b.start : b.start > a.start) ? 0 : 1) ) as trip (trip.id)}
-            <div
-              class="trip"
-              style={trip.style}
-              on:click={() => selectTrip(trip.id)}
-            >
-              <div class="title">{trip.name}</div>
-              <div class="description">{trip.description}</div>
-              <div class="url">
-                <a href={trip.url} target="_blank">*</a>
-              </div>
+      {#each [plannedTrips, previousTrips] as tripList, index}
+        {#if tripList.length}
+          <h3>{index ? 'Previous' : 'Planned'} trips</h3>
+          <div class="trips">
+            <div class="trips">
+              {#each tripList as trip (trip.id)}
+                <div
+                  class="trip"
+                  style={trip.style}
+                  on:click={() => selectTrip(trip.id)}
+                  on:keypress={() => selectTrip(trip.id)}
+                >
+                  <div class="title">{trip.name}</div>
+                  <div class="description">{trip.description}</div>
+                  <div class="url">
+                    <a href={trip.url} target="_blank" rel="noreferrer">*</a>
+                  </div>
+                </div>
+              {/each}
             </div>
-          {/each}
-        </div>
+          </div>
+        {/if}
       {/each}
     {/if}
-  {:else}
+  {:else if !$loading}
     <slot />
   {/if}
 </div>

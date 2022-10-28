@@ -91,8 +91,6 @@ export const parseTrip = (trip = {}) => {
   return { ...trip, style, description };
 };
 export const parseDay = ({ day = [], paths = [], places = [] } = {}) => {
-  const placesMap = new Map(places);
-
   let end;
   let placeName;
 
@@ -103,7 +101,7 @@ export const parseDay = ({ day = [], paths = [], places = [] } = {}) => {
     return directions.find((d) => d.route_id === route_id) || directions[0];
   };
 
-  const getPlace = (place_id) => placesMap.get(place_id) || {};
+  const getPlace = (place_id) => places.find(({ id }) => id === place_id) || {};
 
   return day.map((item, index) => {
     if (!index) end = null;

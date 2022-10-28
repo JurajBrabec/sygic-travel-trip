@@ -1,6 +1,7 @@
 const DEFAULT_CENTER = { lat: -34.397, lng: 150.644 };
 const DEFAULT_ZOOM = 15;
 
+let container;
 let map;
 let markers = [];
 let infoWindow;
@@ -9,7 +10,10 @@ let directionsDisplay;
 
 export const TravelModes = ['DRIVING', 'TRANSIT', 'WALKING'];
 
-const create = (container) => {
+export const mount = (node) => {
+  container = node;
+};
+const create = () => {
   if (!container) return;
   map = new google.maps.Map(container, {
     zoom: DEFAULT_ZOOM,
@@ -22,6 +26,7 @@ const create = (container) => {
 };
 
 const clearRoute = () => {
+  if (!directionsDisplay) return;
   directionsDisplay.set('directions', null);
   showMarkers();
   return;
@@ -33,7 +38,7 @@ const route = async ({
   travelMode = TravelModes[0],
   departure = null,
 } = {}) => {
-  if (!map) return;
+  if (!directionsService) return;
   try {
     const response = await directionsService.route({
       origin,
@@ -83,6 +88,7 @@ const showMarkers = () => {
 };
 
 const addMarker = ({ position, label, title, onClick } = {}) => {
+  if (!window.google) return;
   let marker = markers.find(
     (m) =>
       m.position.lng() === position.lng && m.position.lat() === position.lat
@@ -122,6 +128,7 @@ const setMarkers = (result = []) => {
 
 export default {
   TravelModes,
+  mount,
   create,
   route,
   clearRoute,

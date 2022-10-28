@@ -20,14 +20,6 @@
   const reader = createReader(readHAR);
 </script>
 
-<svelte:head>
-  <script
-    defer
-    async
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDi-MfdDP9jVM8Wh-z01RX6rRb95dKoMbU&callback=initMap">
-  </script>
-</svelte:head>
-
 <div class="main">
   <UserTrips>
     <div>

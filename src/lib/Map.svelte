@@ -10,9 +10,18 @@
   const dispatch = createEventDispatcher();
 
   onMount(() => {
-    map.create(container);
+    map.mount(container);
   });
 </script>
+
+<svelte:head>
+  <script
+    defer
+    async
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDi-MfdDP9jVM8Wh-z01RX6rRb95dKoMbU&callback=initMap"
+  >
+  </script>
+</svelte:head>
 
 <article class="no-print">
   <div class="navbar">
